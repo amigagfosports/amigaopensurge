@@ -131,7 +131,7 @@ cmake -S "$SOURCE_ROOT/vorbis" -B "$BUILD_ROOT/vorbis" \
 cmake --build "$BUILD_ROOT/vorbis" --parallel
 cmake --install "$BUILD_ROOT/vorbis"
 
-fetch_commit amigaallegro https://github.com/DalsinAI/amigaallegro.git \
+fetch_commit amigaallegro https://github.com/amigagfosports/amigaallegro.git \
     a55b4b2ea532b22809f813fd61c2e99d9a045139
 
 cmake -S "$SOURCE_ROOT/amigaallegro" -B "$BUILD_ROOT/amigaallegro" \
