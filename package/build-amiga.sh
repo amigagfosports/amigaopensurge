@@ -2,7 +2,7 @@
 # The release archive, for the repo CI and a daletop build (the whole build,
 # dependencies included, runs past Cradle's 900 s stove_build cap). It runs:
 # 1. ports/amigaos3/build-dependencies.sh: SurgeScript, PhysicsFS, Ogg,
-#    Vorbis and Allegro (DalsinAI/amigaallegro) at their pinned versions,
+#    Vorbis and Allegro (amigagfosports/amigaallegro) at their pinned versions,
 #    into a scratch prefix (nothing goes into the stove);
 # 2. ports/amigaos3/build-first-pass.sh: the game;
 # 3. package/soft-float.sh: every object of all of them, the compile lines,
