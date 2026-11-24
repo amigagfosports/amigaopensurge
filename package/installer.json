@@ -1,6 +1,6 @@
 {
   "name": "OpenSurge",
-  "version": "0.6.1.3-amigaos3-rc4",
+  "version": "0.6.1.3-amigaos3-rc5",
   "drawer": "OpenSurge",
   "program": "opensurge",
   "cpu": "68040",
