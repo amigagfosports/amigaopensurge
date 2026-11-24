@@ -14,7 +14,8 @@
 #    and its icon (made by amicradle's scripts/ports/port_installer.py from
 #    package/installer.json) beside them at the root.
 # OUT also gets the .sha256, OpenSurge.tar (for a lab), package.json,
-# build.log and soft-float.txt. STOVE is the os32-gcc16 stove; VERSION is
+# build.log, soft-float.txt and the engine archive the standalone content
+# ports take (step 5). STOVE is the os32-gcc16 stove; VERSION is
 # package/VERSION. Nothing is published from here.
 # MIT, Copyright (c) 2026 AmiCradle Team.
 set -eu
@@ -60,3 +61,20 @@ cp "$ROOT/amiga/icons/OpenSurge.info" "$BUILD/dist/OpenSurge.info"
 python3 "$HERE/pack.py" --dist "$BUILD/dist" --drawer OpenSurge --program opensurge --archive opensurge \
 	--version "$VERSION" --installer "$HERE/installer" --source "$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo unknown)" \
 	--compiler "$("$P/bin/m68k-amigaos-gcc" --version | head -n 1)" --out "$OUT"
+
+# 5. The engine archive the standalone content ports (amigaaishireimu,
+#    amigasoniclasthope, amigaspeedy) pin in their port/engine.env:
+#    dist/ as ports/amigaos3/package.sh packs it (without the benchmark and
+#    fallback executables), named as their pins name it, with its .sha256.
+#    Owners, order and times are fixed, so the archive's bytes follow from
+#    the build's alone.
+case $VERSION in
+	*-rc*) ENGINE_ASSET="opensurge-${VERSION%-rc*}-68040-rc${VERSION##*-rc}.tar.gz" ;;
+	*) ENGINE_ASSET="opensurge-$VERSION-68040.tar.gz" ;;
+esac
+EPOCH=$(git -C "$ROOT" log -1 --format=%ct 2>/dev/null || echo 0)
+tar -C "$BUILD/inst" --exclude='dist/opensurge-*' --sort=name --owner=0 --group=0 --numeric-owner \
+	--mtime="@$EPOCH" -cf - dist | gzip -n -9 > "$OUT/$ENGINE_ASSET"
+(cd "$OUT" && sha256sum "$ENGINE_ASSET" > "$ENGINE_ASSET.sha256")
+echo "engine archive: $ENGINE_ASSET $(cut -d' ' -f1 "$OUT/$ENGINE_ASSET.sha256")"
+echo "dist/opensurge: $(tar -xzOf "$OUT/$ENGINE_ASSET" dist/opensurge | sha256sum | cut -d' ' -f1)"
